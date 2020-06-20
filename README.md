@@ -1,15 +1,27 @@
 # action-release-debugapk
 
-![screenshot](screenshot.png)
+🕷 Build and release debug APK from your Android project.
 
-🕷 Build and release debug APK from your Android project
+This project differs from [ShaunLWM/action-release-debugapk](https://github.com/ShaunLWM/action-release-debugapk) in that it also has a Gradle task prerequisite, which will extract Gradle versionName fields that have function calls.
+
+![screenshot](screenshot.png)
 
 ## Warning ⚠
 Add a target branch (eg. master) to build the APK to prevent infinite loop (releasing the APK on the release tag will trigger a rerun of the action).
 
 ## Usage
 
-To use the action simply add the following lines to your `.github/workflows/android.yml` and provide the required Secrets and Environment variables.
+To use the action add the following lines to your `.github/workflows/android.yml` and provide the required Secrets and Environment variables, as well as add the extra task to your module's build.gradle
+
+#### Gradle
+Add the following to your module's build.gradle file
+```
+task generateVersionTxt {
+    doLast {
+        file("./version.txt").text = android.defaultConfig.versionName
+    }
+}
+```
 
 #### YML
 ```
@@ -35,8 +47,10 @@ jobs:
       run: ./gradlew build
     - name: Build Debug APK
       run: ./gradlew assembleDebug
+    - name: Generate version.txt for Hub release
+      run: ./gradlew generateVersionTxt
     - name: Releasing using Hub
-      uses: ShaunLWM/action-release-debugapk@master
+      uses: valley-fordham/action-release-debugapk@master
       env:
        GITHUB_TOKEN: ${{ secrets.TOKEN }}
        APP_FOLDER: app
@@ -60,4 +74,4 @@ You'll need to provide these environment variables to specify exactly what infor
 
 ## Credits
 
-Based off [elgohr/Github-Hub-Action](https://github.com/elgohr/Github-Hub-Action)
+Forked from [ShaunLWM/action-release-debugapk](https://github.com/ShaunLWM/action-release-debugapk) which is based on [elgohr/Github-Hub-Action](https://github.com/elgohr/Github-Hub-Action)

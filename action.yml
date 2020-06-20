@@ -1,12 +1,13 @@
-name: "Debug APK Publisher"
+name: "Build and Release Debug APK"
 branding:
   icon: "package"
-  color: "red"
-description: "Build & Publish Debug APK on Github"
-author: "ShaunLWM"
+  color: "blue"
+description: "Build & Release Debug APK on GitHub. Load version number from file."
+author: "valley-fordham"
 inputs:
   GITHUB_TOKEN:
-    description: "Github secret token to allow automated publishing of APK to release."
+    required: true
+    description: "GitHub secret token to allow automated publishing of APK to release."
 runs:
   using: "docker"
   image: "Dockerfile"
